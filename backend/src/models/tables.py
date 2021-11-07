@@ -1,13 +1,7 @@
 from src import db
 from datetime import datetime
-from sqlalchemy_serializer import SerializerMixin
 
-
-class Clients(db.Model, SerializerMixin):
-
-    serialize_only = ('_id', 'name', 'cpf', 'age', 'creatd_at', 'images_id')
-    serialize_rules = ()
-
+class Clients(db.Model):
     __tablename__ = 'clients'
     _id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String)
@@ -22,10 +16,7 @@ class Clients(db.Model, SerializerMixin):
         self.age = age
 
 
-class Imagens(db.Model, SerializerMixin):
-    serialize_only = ('_id', 'name', 'name', 'data','rendered_data', 'creatd_at', 'client_id')
-    serialize_rules = ()
-
+class Imagens(db.Model):
     __tablename__ = 'images'
     _id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String)
