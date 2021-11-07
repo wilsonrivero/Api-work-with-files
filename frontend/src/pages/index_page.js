@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 
-
+// Para funcionar tem que oclocara exatamente o mesmo nome
 function IndexPage() {
   const [clients, setClients] = useState([])
 
