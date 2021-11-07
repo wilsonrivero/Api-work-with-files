@@ -75,3 +75,22 @@ def upload(_id):
         db.session.commit()
 
         return {"image_id": new_image._id, "msg": "Upload successfully!"}
+
+
+@app.route('/delete/<_id>', methods=["DELETE"])
+def delete(_id):
+    if request.method == 'DELETE':
+        client = Clients.query.filter_by(_id=_id).first()
+        images = Imagens.query.filter_by(client_id=_id).first()
+
+        if images:
+            db.session.delete(images)
+            db.session.commit()
+
+        db.session.delete(client)
+        db.session.commit()
+
+        return {"msg": "Client deleted, with images"}
+
+    return {"msg": 'This need method DELETE'}
+
