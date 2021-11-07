@@ -13,21 +13,26 @@ def rendered_img(data):
 def index():
     clients = Clients.query.all()
     result_client = clients_schema.dump(clients)
-   
+
+    res_json = {
+            "Clients": []
+        }
+
+    images_list = []
+
     for i in range(len(clients)):
-        images_list = []
         client = clients[i]
         client_id = client._id
+        #res_json["Clients"].append(result_client[i])
     
         Imgs = Imagens.query.filter_by(client_id=client_id).all()
         imgs_serializer = images_schema.dump(Imgs)
-        images_list.append(imgs_serializer)
-        # result_client["Images"] = images_list
-
-
-    # print(images_list)
-   
-    return json.dumps(result_client)
+        res_json["Clients"].append({
+                "Client": result_client[i],
+                "Images": imgs_serializer
+            })
+    
+    return res_json
 
 
 @app.route('/register', methods=['POST', 'GET'])
