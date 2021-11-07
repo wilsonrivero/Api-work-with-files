@@ -1,7 +1,9 @@
 
 #Folders
 backend/venv
+frontend/node_modules
 
 # Files
 backend/*.swp
 backend/src/controllers/*.swp
+frontend/.eslintrc.js
