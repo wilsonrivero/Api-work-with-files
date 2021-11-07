@@ -18,12 +18,10 @@ def index():
             "Clients": []
         }
 
-    images_list = []
 
     for i in range(len(clients)):
         client = clients[i]
         client_id = client._id
-        #res_json["Clients"].append(result_client[i])
     
         Imgs = Imagens.query.filter_by(client_id=client_id).all()
         imgs_serializer = images_schema.dump(Imgs)
@@ -59,6 +57,21 @@ def register():
             db.session.add(new_Image)
             db.session.commit()
 
-        return {"client_id": new_Client._id, "img_id":new_Image._id} 
+        return {"client_id": new_Client._id, "img_id": new_Image._id} 
 
     return {"Method": 'Get'}
+
+
+@app.route('/upload/<_id>', methods=["POST"])
+def upload(_id):
+    if request.method == 'POST':
+        file = request.files["file"]
+        file_name = file.filename
+        data_binary = file.read()
+        img_base64 = rendered_img(data_binary)
+
+        new_image = Imagens(file_name, data_binary, img_base64, _id)
+        db.session.add(new_image)
+        db.session.commit()
+
+        return {"image_id": new_image._id, "msg": "Upload successfully!"}
