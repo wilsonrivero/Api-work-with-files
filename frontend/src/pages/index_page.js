@@ -7,7 +7,8 @@ function IndexPage() {
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/').then(req => {
-      console.log(req.data)
+      console.log(req.data.Clients)
+      setClients(req.data.Clients)
     })    
 
   }, [])
@@ -16,6 +17,26 @@ function IndexPage() {
   return (
     <div className="App">
       <h1>Index Page</h1>
+      <div>
+      {clients.map(data => {
+          return (
+            <div>
+            <h2>{data.Client.name}</h2>
+            <span>{data.Client.cpf}</span>
+
+            {data.Images.map(image => {
+                return (
+                  <div>
+                    <h3>{image.name}</h3>
+                    <img  src={`data:image/jpg;base64,${image.rendered_data}`} alt="img" />
+                  </div>
+                )
+              })}
+            </div>
+          )
+
+        })}
+      </div>
     </div>  
   )
 }
