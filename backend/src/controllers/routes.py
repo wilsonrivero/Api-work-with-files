@@ -36,28 +36,30 @@ def index():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        fields = request.form
+        fields =  request.form
+        print(fields)
         name = fields["name"]
         cpf = fields["cpf"]
         age = fields["age"]
 
+        new_Client = Clients(name, cpf, age)
+        db.session.add(new_Client)
+        db.session.commit()
+
         file = request.files["file"]
+        print(file)
 
         if file:
             file_name = file.filename
             data_binary = file.read()
             img_base64 = rendered_img(data_binary)
 
-            new_Client = Clients(name, cpf, age)
-            db.session.add(new_Client)
-            db.session.commit()
-
-
             new_Image = Imagens(file_name, data_binary, img_base64, new_Client._id)
             db.session.add(new_Image)
             db.session.commit()
 
-        return {"client_id": new_Client._id, "img_id": new_Image._id} 
+            return {"client_id": new_Client._id, "img_id": new_Image._id} 
+        return {'cleint_id': new_Client._id}
 
     return {"Method": 'Get'}
 
