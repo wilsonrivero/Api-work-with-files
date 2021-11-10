@@ -1,56 +1,79 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import {Form} from '@unform/web';
-import Input from '../components/input.js';
 
 
 
+function RegisterPage() {
+  const [inputs, setInputs] = useState({});
+  const [file, setFile] = useState()
 
-function RegisterPage () {
-  const formRef = useRef(null)
-  function handleSubmit(data) {
-    //console.log(data)
-
-    const formData = new FormData()
-       formData.append('file', data.file)
-
-    //console.log(formData)
-    axios.post('http://127.0.0.1:8000/register', formData ).then(req => {
-      console.log(req.data)
-    }).catch(req => {
-      console.log(req)
-    })
-
+  const handleChange = (e) => {
+      const name = e.target.name;
+      const value = e.target.value;
+      setInputs(values => ({...values, [name]: value}))
   }
+  const handleChangeFile = (event) => {
+		const file = event.target.files[0]
+      setFile(file)
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  
+    const form_data = new FormData()
+    form_data.append('name', inputs.name)
+    form_data.append('cpf', inputs.cpf)
+    form_data.append('age', inputs.age)
+    form_data.append('file', file)
 
-
+    console.log(form_data)
+    axios.post('http://127.0.0.1:8000/register', form_data).then(req => {
+      console.log(req.data)
+    })
+  }
+    
   return (
-    <div className="App">
-      <h1>Register Page</h1>
+    <form onSubmit={handleSubmit} encType='multipart/form-data'>
+      <label>Enter your name:
+        <input 
+          type="text" 
+          name="name" 
+          value={inputs.name || ""}
+          onChange={handleChange}
+        />
+      </label>
+      <label>Enter your cpf:
+        <input 
+          type="text" 
+          name="cpf"
+          value={inputs.cpf || ""} 
+          onChange={handleChange}
+        />
+      </label>
 
-      <Form method="POST" ref={formRef} onSubmit={handleSubmit}  encType='multipart/form-data'>
-        <div>
-          <label htmlFor="name">Nome:</label>
-          <Input type="text" name="name"/>
-        </div> 
+      <label>Enter your age:
+            <input 
+              type="number" 
+              name="age" 
+              value={inputs.age || ""}
+              onChange={handleChange}
+          />
+      </label>
 
-        <div>
-          <label htmlFor="age">Cpf:</label>
-          <Input type="text" name="cpf"/>
-        </div> 
+		 <label>Enter your Image:
+            <input 
+              type="file" 
+            name="file" 
+            value={inputs.file || ""} 
+            onChange={handleChangeFile}
+          />
+      </label>
 
-        <div>
-          <label htmlFor="age">Age:</label>
-          <Input type="number" name="age"/>
-        </div> 
-        <div>
-          <label htmlFor="file">File:</label>
-          <Input type="file" name="file"/>
-        </div> 
-        <button type="submit">Enviar</button>
-      </Form>
-    </div>
 
+
+      <input type="submit" />
+    </form>
   )
 }
+
 export default RegisterPage;
